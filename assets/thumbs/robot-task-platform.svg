@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" font-family="'IBM Plex Mono', Consolas, Menlo, monospace">
+  <title>Architecture schematic: operator console, control plane, event bus, EKS test jobs and hardware-in-the-loop bridge</title>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#4fa8d8" stroke-opacity=".08"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#8fd4f5"/>
+    </marker>
+  </defs>
+  <rect width="960" height="540" fill="#0f2740"/>
+  <rect width="960" height="540" fill="url(#grid)"/>
+
+  <g fill="#122c49" stroke="#4fa8d8" stroke-width="3">
+    <rect x="40" y="60" width="250" height="90" rx="6"/>
+    <rect x="345" y="60" width="290" height="90" rx="6" stroke="#ff8a3d"/>
+    <rect x="690" y="60" width="230" height="90" rx="6"/>
+    <rect x="40" y="290" width="250" height="100" rx="6"/>
+    <rect x="345" y="240" width="575" height="190" rx="6" fill="#0b1e33" stroke-dasharray="12 8"/>
+  </g>
+  <g fill="#0f2740" stroke="#8fd4f5" stroke-width="3">
+    <rect x="375" y="320" width="155" height="80" rx="4"/>
+    <rect x="555" y="320" width="155" height="80" rx="4"/>
+    <rect x="735" y="320" width="155" height="80" rx="4"/>
+  </g>
+
+  <g font-size="28" fill="#eaf2f8" text-anchor="middle">
+    <text x="165" y="115">CONSOLE</text>
+    <text x="490" y="115">CONTROL PLANE</text>
+    <text x="805" y="115">EVENT BUS</text>
+    <text x="165" y="350">HIL</text>
+    <text x="165" y="380" font-size="22" fill="#7f9db3">BRIDGE</text>
+  </g>
+  <text x="370" y="285" font-size="26" fill="#8fd4f5">EKS · TEST JOBS</text>
+  <g font-size="24" fill="#7f9db3" text-anchor="middle">
+    <text x="452" y="368">job</text>
+    <text x="632" y="368">job</text>
+    <text x="812" y="368">job</text>
+  </g>
+
+  <g stroke="#8fd4f5" stroke-width="4" fill="none" marker-end="url(#arrow)">
+    <line x1="292" y1="105" x2="338" y2="105"/>
+    <line x1="637" y1="105" x2="683" y2="105"/>
+    <line x1="805" y1="152" x2="805" y2="233"/>
+    <line x1="343" y1="340" x2="297" y2="340"/>
+  </g>
+
+  <text x="40" y="516" font-size="22" letter-spacing="3" fill="#7f9db3">HARDWARE-IN-THE-LOOP TEST PLATFORM · SCHEMATIC</text>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" font-family="'IBM Plex Mono', Consolas, Menlo, monospace">
+  <title>Schematic: planner agent delegating to research, calendar/email (MCP) and summarizer sub-agents</title>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#4fa8d8" stroke-opacity=".08"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#8fd4f5"/>
+    </marker>
+  </defs>
+  <rect width="960" height="540" fill="#0f2740"/>
+  <rect width="960" height="540" fill="url(#grid)"/>
+
+  <!-- request -->
+  <text x="40" y="110" font-size="28" fill="#7f9db3">TASK</text>
+  <line x1="130" y1="100" x2="332" y2="100" stroke="#8fd4f5" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrow)"/>
+
+  <!-- planner -->
+  <rect x="340" y="55" width="280" height="90" rx="6" fill="#122c49" stroke="#ff8a3d" stroke-width="3"/>
+  <text x="480" y="112" text-anchor="middle" font-size="32" fill="#eaf2f8">PLANNER</text>
+
+  <!-- delegation -->
+  <g stroke="#8fd4f5" stroke-width="4" fill="none" marker-end="url(#arrow)">
+    <path d="M480 147 V210 H170 V322"/>
+    <path d="M480 147 V322"/>
+    <path d="M480 210 H790 V322"/>
+  </g>
+
+  <!-- specialists -->
+  <g fill="#122c49" stroke="#4fa8d8" stroke-width="3">
+    <rect x="40" y="330" width="260" height="90" rx="6"/>
+    <rect x="350" y="330" width="260" height="90" rx="6"/>
+    <rect x="660" y="330" width="260" height="90" rx="6"/>
+  </g>
+  <g font-size="28" fill="#eaf2f8" text-anchor="middle">
+    <text x="170" y="385">RESEARCH</text>
+    <text x="480" y="385">CAL / EMAIL</text>
+    <text x="790" y="385">SUMMARIZER</text>
+  </g>
+  <rect x="535" y="304" width="90" height="36" rx="18" fill="#0f2740" stroke="#ff8a3d" stroke-width="3"/>
+  <text x="580" y="330" text-anchor="middle" font-size="22" fill="#ff8a3d">MCP</text>
+
+  <text x="40" y="516" font-size="22" letter-spacing="3" fill="#7f9db3">MULTI-AGENT ORCHESTRATION · SCHEMATIC</text>
+</svg>

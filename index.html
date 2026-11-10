@@ -4,6 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lucas Swierad — Robotics &amp; Software Engineer</title>
+<meta name="description" content="Lucas Swierad — Computer Science + Robotics at the University of Michigan. Robot perception, SLAM, underwater autonomy, and cloud infrastructure.">
+<link rel="canonical" href="https://lucasswierad.github.io/">
+<meta name="theme-color" content="#0b1e33">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Lucas Swierad">
+<meta property="og:title" content="Lucas Swierad — Robotics &amp; Software Engineer">
+<meta property="og:description" content="Computer Science + Robotics at the University of Michigan. Robot perception, SLAM, underwater autonomy, and cloud infrastructure.">
+<meta property="og:url" content="https://lucasswierad.github.io/">
+<meta property="og:image" content="https://lucasswierad.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lucas Swierad — Robotics &amp; Software Engineer, University of Michigan">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lucas Swierad — Robotics &amp; Software Engineer">
+<meta name="twitter:description" content="Computer Science + Robotics at the University of Michigan. Robot perception, SLAM, underwater autonomy, and cloud infrastructure.">
+<meta name="twitter:image" content="https://lucasswierad.github.io/assets/og.png">
+
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+
+<script>
+  // Sections are visible by default. Only hide them for the scroll-reveal when
+  // JS is running, IntersectionObserver exists, and the user allows motion.
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js');
+  }
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -18,7 +47,8 @@
     --cyan-bright: #8fd4f5;
     --accent: #ff8a3d;
     --text: #eaf2f8;
-    --text-muted: #7f9db3;
+    --text-muted: #7f9db3;   /* 5.9:1 on --bg, 5.3:1 on --bg-panel */
+    --text-dim: #5f8fb3;     /* 4.9:1 on --bg — smallest allowed for text */
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
@@ -51,6 +81,18 @@
   ::selection{ background: var(--accent); color: var(--bg); }
   :focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
 
+  .sr-only{
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+  .skip-link{
+    position: absolute; left: 16px; top: -60px; z-index: 100;
+    background: var(--accent); color: #1a1206;
+    font-family: var(--font-mono); font-size: 0.8rem;
+    padding: 10px 14px;
+  }
+  .skip-link:focus{ top: 12px; }
+
   .eyebrow{
     font-family: var(--font-mono);
     font-size: 0.72rem;
@@ -61,7 +103,7 @@
     align-items: center;
     gap: 10px;
   }
-  .eyebrow::before{ content:""; width: 22px; height: 1px; background: var(--cyan); }
+  .eyebrow::before{ content:""; flex: none; width: 22px; height: 1px; background: var(--cyan); }
 
   h1, h2, h3{ font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; }
 
@@ -153,6 +195,7 @@
   }
 
   .joint{ cursor: pointer; }
+  .joint:focus{ outline: none; }
   .joint circle.outer{
     fill: var(--bg);
     stroke: var(--line);
@@ -162,7 +205,8 @@
   .joint circle.inner{ fill: var(--line); transition: fill 0.25s ease; }
   .joint.active circle.outer{ stroke: var(--accent); r: 9; }
   .joint.active circle.inner{ fill: var(--accent); }
-  .joint:hover circle.outer{ stroke: var(--cyan-bright); }
+  .joint:hover circle.outer, .joint:focus-visible circle.outer{ stroke: var(--cyan-bright); }
+  .joint:focus-visible circle.outer{ stroke-width: 3; }
 
   .joint-label{
     font-family: var(--font-mono);
@@ -173,7 +217,7 @@
     opacity: 0;
     transition: opacity 0.2s ease;
   }
-  .joint:hover .joint-label, .joint.active .joint-label{ opacity: 1; fill: var(--cyan-bright); }
+  .joint:hover .joint-label, .joint:focus-visible .joint-label, .joint.active .joint-label{ opacity: 1; fill: var(--cyan-bright); }
 
   /* ---------- Layout ---------- */
   main{ position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 28px; }
@@ -182,24 +226,28 @@
   section{
     padding: 140px 0 60px;
     border-bottom: 1px dashed var(--line-soft);
-    opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
   }
-  section.in-view{ opacity: 1; transform: translateY(0); }
   section:first-of-type{ padding-top: 160px; }
   section:last-of-type{ border-bottom: none; }
 
+  /* Scroll reveal — only applied when the <head> script added .js.
+     The hidden state is the :not(.in-view) rule, so no later rule has to
+     out-rank it (:not(#hero) carries ID specificity). */
+  .js section{ transition: opacity 0.6s ease, transform 0.6s ease; }
+  .js section:not(.in-view):not(#hero){ opacity: 0; transform: translateY(18px); }
+
   @media (prefers-reduced-motion: reduce){
-    section{ opacity: 1; transform: none; transition: none; }
     html{ scroll-behavior: auto; }
+  }
+  @media print{
+    .js section:not(.in-view):not(#hero){ opacity: 1; transform: none; }
   }
 
   .section-head{ margin-bottom: 40px; }
   .section-head h2{ font-size: clamp(1.6rem, 3vw, 2.2rem); margin-top: 10px; }
 
   /* ---------- Hero ---------- */
-  #hero{ padding-top: 180px; border-bottom: 1px dashed var(--line-soft); opacity: 1; transform: none; }
+  #hero{ padding-top: 180px; }
   .hero-grid{ display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
   @media (min-width: 800px){ .hero-grid{ grid-template-columns: 1.3fr 0.9fr; } }
 
@@ -256,30 +304,22 @@
   .socials a{ font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); border-bottom: 1px solid transparent; }
   .socials a:hover{ color: var(--cyan-bright); border-color: var(--cyan-bright); }
 
-  /* ---------- Image placeholders (blueprint style) ---------- */
-  .img-placeholder{
+  /* ---------- Blueprint image frames ---------- */
+  .frame{
     position: relative;
     border: 1px dashed var(--line);
     background: repeating-linear-gradient(45deg, rgba(79,168,216,0.04), rgba(79,168,216,0.04) 8px, transparent 8px, transparent 16px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    color: var(--text-muted);
-    text-align: center;
-    padding: 20px;
+    padding: 8px;
   }
-  .img-placeholder .corner{ position: absolute; width: 14px; height: 14px; border: 1px solid var(--cyan); }
-  .img-placeholder .corner.tl{ top: -1px; left: -1px; border-right: none; border-bottom: none; }
-  .img-placeholder .corner.tr{ top: -1px; right: -1px; border-left: none; border-bottom: none; }
-  .img-placeholder .corner.bl{ bottom: -1px; left: -1px; border-right: none; border-top: none; }
-  .img-placeholder .corner.br{ bottom: -1px; right: -1px; border-left: none; border-top: none; }
-  .img-placeholder svg{ width: 30px; height: 30px; opacity: 0.6; }
-  .img-placeholder .ph-label{ font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; }
-  .img-placeholder .ph-sub{ font-family: var(--font-mono); font-size: 0.58rem; color: var(--line); }
+  .frame .corner{ position: absolute; width: 14px; height: 14px; border: 1px solid var(--cyan); }
+  .frame .corner.tl{ top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .frame .corner.tr{ top: -1px; right: -1px; border-left: none; border-bottom: none; }
+  .frame .corner.bl{ bottom: -1px; left: -1px; border-right: none; border-top: none; }
+  .frame .corner.br{ bottom: -1px; right: -1px; border-left: none; border-top: none; }
+  .frame img{ display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
 
-  #hero .img-placeholder{ aspect-ratio: 1; max-width: 320px; justify-self: center; }
+  .hero-frame{ max-width: 320px; width: 100%; justify-self: center; padding: 10px; }
+  .hero-frame img{ aspect-ratio: 640 / 876; }
 
   /* ---------- About ---------- */
   .about-grid{ display: grid; grid-template-columns: 1fr; gap: 26px; }
@@ -289,7 +329,14 @@
   .spec-card ul{ list-style: none; }
   .spec-card li{ color: var(--text-muted); font-size: 0.92rem; padding: 6px 0; border-bottom: 1px dashed var(--line-soft); }
   .spec-card li:last-child{ border-bottom: none; }
-  .about-lede{ grid-column: 1 / -1; font-size: 1.1rem; color: var(--text); max-width: 68ch; margin-bottom: 6px; }
+  .about-lede{ grid-column: 1 / -1; font-size: 1.1rem; color: var(--text); max-width: 68ch; margin-bottom: 26px; }
+
+  .coursework{ grid-column: 1 / -1; }
+  .course-list{ display: grid; grid-template-columns: 1fr; column-gap: 28px; }
+  @media (min-width: 560px){ .course-list{ grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 860px){ .course-list{ grid-template-columns: 1fr 1fr 1fr; } }
+  .course-list li:last-child{ border-bottom: 1px dashed var(--line-soft); }
+  .course-list .code{ font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-bright); margin-right: 8px; white-space: nowrap; }
 
   /* ---------- Work Experience ---------- */
   .job{ display: grid; grid-template-columns: 130px 1fr; gap: 24px; padding: 26px 0; border-bottom: 1px dashed var(--line-soft); }
@@ -304,28 +351,14 @@
 
   @media (max-width: 560px){ .job{ grid-template-columns: 1fr; gap: 8px; } }
 
-  /* ---------- Skills ---------- */
-  .skills-cols{ display: grid; grid-template-columns: 1fr; gap: 34px; }
-  @media (min-width: 700px){ .skills-cols{ grid-template-columns: 1fr 1fr; } }
-  .skills-cols h3{ font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; }
-  .tag-list{ display: flex; flex-wrap: wrap; gap: 10px; }
-  .tag{ font-family: var(--font-mono); font-size: 0.75rem; padding: 7px 12px; border: 1px solid var(--line); color: var(--text-muted); transition: all 0.2s ease; }
-  .tag:hover{ border-color: var(--cyan-bright); color: var(--cyan-bright); }
-
   /* ---------- Projects ---------- */
   .project{ display: grid; grid-template-columns: 1fr; gap: 22px; padding: 36px 0; border-bottom: 1px dashed var(--line-soft); }
   .project:last-child{ border-bottom: none; }
-  @media (min-width: 760px){ .project{ grid-template-columns: 220px 1fr; align-items: start; } }
-  .project .img-placeholder{ aspect-ratio: 4/3; }
-  .project-body .eyebrow{ margin-bottom: 10px; }
-  .project h3{ font-size: 1.3rem; margin-bottom: 10px; }
+  @media (min-width: 760px){ .project{ grid-template-columns: 280px 1fr; align-items: start; } }
+  .project-body .eyebrow, .project p.eyebrow{ margin-bottom: 10px; font-size: 0.72rem; color: var(--cyan); }
+  .project h3{ font-size: 1.3rem; margin-bottom: 10px; transition: color 0.2s ease; }
   .project p{ color: var(--text-muted); font-size: 0.95rem; margin-bottom: 14px; }
-  .project-link{
-    color: var(--text);
-    border-bottom: 1px solid var(--line);
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-  .project-link:hover{ color: var(--cyan-bright); border-color: var(--cyan-bright); }
+  .project code{ font-family: var(--font-mono); font-size: 0.88em; color: var(--cyan-bright); }
   .link-note{
     font-family: var(--font-mono);
     font-size: 0.72rem;
@@ -333,6 +366,50 @@
     letter-spacing: 0.02em;
     margin-top: -6px;
   }
+  .project p.link-note{ color: var(--accent); font-size: 0.72rem; }
+
+  .links{ list-style: none; display: flex; flex-wrap: wrap; gap: 10px 22px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .links a{ color: var(--cyan-bright); border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: border-color 0.2s ease, color 0.2s ease; }
+  .links a:hover{ color: var(--text); border-color: var(--cyan-bright); }
+  .links .plain{ color: var(--text-muted); text-transform: none; letter-spacing: 0.02em; }
+
+  /* Whole card clickable only when it has exactly one link (.project--linked) */
+  .project--linked{ position: relative; }
+  .project--linked .stretched::after{ content: ""; position: absolute; inset: 0; z-index: 1; }
+  .project--linked .frame{ transition: border-color 0.2s ease; }
+  .project--linked:hover h3, .project--linked:focus-within h3{ color: var(--cyan-bright); }
+  .project--linked:hover .frame, .project--linked:focus-within .frame{ border-color: var(--cyan); }
+
+  /* Video thumbnail → dialog */
+  .play{ display: block; position: relative; }
+  .play-badge{
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em;
+    background: rgba(11,30,51,0.85); color: var(--cyan-bright);
+    border: 1px solid var(--cyan); padding: 8px 12px; white-space: nowrap;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .play:hover .play-badge, .play:focus-visible .play-badge{ background: var(--accent); border-color: var(--accent); color: #1a1206; }
+
+  .video-dialog{
+    margin: auto; padding: 12px;
+    border: 1px solid var(--line); background: var(--bg-panel); color: var(--text);
+    max-width: 94vw; max-height: 94vh;
+  }
+  .video-dialog::backdrop{ background: rgba(5,14,26,0.86); }
+  .video-dialog video{ display: block; height: min(80vh, 1280px); width: auto; max-width: 88vw; aspect-ratio: 9 / 16; background: #000; }
+  .video-dialog form{ display: flex; justify-content: flex-end; margin-top: 10px; }
+
+  /* ---------- Skills ---------- */
+  .skills-cols{ display: grid; grid-template-columns: 1fr; gap: 34px; }
+  @media (min-width: 700px){
+    .skills-cols{ grid-template-columns: 1fr 1fr; }
+    .skills-cols > div:last-child:nth-child(odd){ grid-column: 1 / -1; }
+  }
+  .skills-cols h3{ font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; }
+  .tag-list{ list-style: none; display: flex; flex-wrap: wrap; gap: 10px; }
+  .tag{ font-family: var(--font-mono); font-size: 0.75rem; padding: 7px 12px; border: 1px solid var(--line); color: var(--text-muted); transition: all 0.2s ease; }
+  .tag:hover{ border-color: var(--cyan-bright); color: var(--cyan-bright); }
 
   /* ---------- Contact ---------- */
   #contact{ padding-bottom: 140px; }
@@ -344,78 +421,80 @@
   .contact-links a{ font-family: var(--font-mono); font-size: 0.85rem; color: var(--cyan-bright); border-bottom: 1px solid var(--line); padding-bottom: 3px; width: fit-content; }
   .contact-links a:hover{ border-color: var(--cyan-bright); }
 
-  footer{ position: relative; z-index: 1; text-align: center; padding: 30px 20px 40px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--line); letter-spacing: 0.05em; }
+  footer{ position: relative; z-index: 1; text-align: center; padding: 30px 20px 40px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.05em; }
 </style>
 </head>
 <body>
 
-  <div id="topbar">
-    <div class="logo">LUCAS<span>://</span>SWIERAD</div>
-    <nav>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header id="topbar">
+    <a class="logo" href="#hero" aria-label="Lucas Swierad — back to top">LUCAS<span>://</span>SWIERAD</a>
+    <nav aria-label="Primary">
       <a href="#about">About</a>
       <a href="#work-experience">Experience</a>
-      <a href="#hobbies">Off Duty</a>
-      <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#hobbies">Off Duty</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobile-menu">MENU</button>
-  </div>
+    <button type="button" class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobile-menu">MENU</button>
+  </header>
 
-  <div id="mobile-menu">
+  <nav id="mobile-menu" aria-label="Mobile">
     <a href="#about">About</a>
-    <a href="#hobbies">Off Duty</a>
     <a href="#work-experience">Experience</a>
-    <a href="#skills">Skills</a>
     <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#hobbies">Off Duty</a>
     <a href="#contact">Contact</a>
-  </div>
+  </nav>
 
-  <!-- Kinematic chain rail: signature element + desktop nav -->
-  <div id="chain-rail">
+  <!-- Kinematic chain rail: signature element + desktop section nav -->
+  <nav id="chain-rail" aria-label="Section progress">
     <svg viewBox="0 0 40 780" preserveAspectRatio="xMidYMid meet">
       <path class="chain-spine" d="M20,20 L20,760"></path>
       <path class="chain-spine-fill" id="chainFill" d="M20,20 L20,760"></path>
 
-      <g class="joint" data-target="hero" transform="translate(20,20)">
+      <a class="joint" href="#hero" data-target="hero" transform="translate(20,20)">
         <circle class="outer" r="7"></circle>
         <circle class="inner" r="3"></circle>
         <text class="joint-label" x="14" y="4">Home</text>
-      </g>
-      <g class="joint" data-target="about" transform="translate(20,143)">
+      </a>
+      <a class="joint" href="#about" data-target="about" transform="translate(20,143)">
         <circle class="outer" r="7"></circle>
         <circle class="inner" r="3"></circle>
         <text class="joint-label" x="14" y="4">About</text>
-      </g>
-      <g class="joint" data-target="hobbies" transform="translate(20,267)">
-        <circle class="outer" r="7"></circle>
-        <circle class="inner" r="3"></circle>
-        <text class="joint-label" x="14" y="4">Off Duty</text>
-      </g>
-      <g class="joint" data-target="work-experience" transform="translate(20,390)">
+      </a>
+      <a class="joint" href="#work-experience" data-target="work-experience" transform="translate(20,267)">
         <circle class="outer" r="7"></circle>
         <circle class="inner" r="3"></circle>
         <text class="joint-label" x="14" y="4">Experience</text>
-      </g>
-      <g class="joint" data-target="skills" transform="translate(20,513)">
-        <circle class="outer" r="7"></circle>
-        <circle class="inner" r="3"></circle>
-        <text class="joint-label" x="14" y="4">Skills</text>
-      </g>
-      <g class="joint" data-target="projects" transform="translate(20,637)">
+      </a>
+      <a class="joint" href="#projects" data-target="projects" transform="translate(20,390)">
         <circle class="outer" r="7"></circle>
         <circle class="inner" r="3"></circle>
         <text class="joint-label" x="14" y="4">Projects</text>
-      </g>
-      <g class="joint" data-target="contact" transform="translate(20,760)">
+      </a>
+      <a class="joint" href="#skills" data-target="skills" transform="translate(20,513)">
+        <circle class="outer" r="7"></circle>
+        <circle class="inner" r="3"></circle>
+        <text class="joint-label" x="14" y="4">Skills</text>
+      </a>
+      <a class="joint" href="#hobbies" data-target="hobbies" transform="translate(20,637)">
+        <circle class="outer" r="7"></circle>
+        <circle class="inner" r="3"></circle>
+        <text class="joint-label" x="14" y="4">Off Duty</text>
+      </a>
+      <a class="joint" href="#contact" data-target="contact" transform="translate(20,760)">
         <circle class="outer" r="7"></circle>
         <circle class="inner" r="3"></circle>
         <text class="joint-label" x="14" y="4">Contact</text>
-      </g>
+      </a>
     </svg>
-  </div>
+  </nav>
 
-  <main>
+  <main id="main">
 
     <section id="hero">
       <div class="hero-grid">
@@ -428,13 +507,13 @@
             <span>STATUS: <b>ONLINE</b></span>
             <span>LOCATION: <b>Ann Arbor, MI</b></span>
             <span>DEGREE_ETA: <b>05.2027</b></span>
-            <span><span class="cursor"></span></span>
+            <span aria-hidden="true"><span class="cursor"></span></span>
           </div>
 
           <div class="btn-row">
-            <button class="btn primary" onclick="window.open('./assets/resume-cs.pdf')">View CS Resume</button>
-            <button class="btn primary" onclick="window.open('./assets/resume-rob.pdf')">View ROB Resume</button>
-            <button class="btn" onclick="document.getElementById('contact').scrollIntoView()">Contact</button>
+            <a class="btn primary" href="./assets/resume-cs.pdf" target="_blank" rel="noopener">View SWE Resume</a>
+            <a class="btn primary" href="./assets/resume-rob.pdf" target="_blank" rel="noopener">View ROB Resume</a>
+            <a class="btn" href="#contact">Contact</a>
           </div>
 
           <div class="socials">
@@ -443,10 +522,11 @@
           </div>
         </div>
 
-        <div class="img-placeholder">
+        <div class="frame hero-frame">
           <span class="corner tl"></span><span class="corner tr"></span>
           <span class="corner bl"></span><span class="corner br"></span>
-          <img src="./assets/profile-pic1.png" alt="Lucas Swierad" style="width:100%;height:100%;object-fit:contain;">
+          <img src="./assets/profile.webp" width="640" height="876" fetchpriority="high"
+               alt="Portrait of Lucas Swierad under stone arches overlooking the ocean">
         </div>
       </div>
     </section>
@@ -456,7 +536,7 @@
         <p class="eyebrow">Spec Sheet</p>
         <h2>About</h2>
       </div>
-      <p class="about-lede">I'm a Computer Science and Robotics student at the University of Michigan with hands-on experience across site reliability engineering, full-stack development, and machine learning. Aswell as a growing focus on robot perception, SLAM, and autonomous systems research.</p>
+      <p class="about-lede">I'm a Computer Science + Robotics student at the University of Michigan (graduating May 2027). I do underwater robot navigation research in the Robotic Exploration Lab, and I've shipped production infrastructure and full-stack software at Barracuda Networks, U-M CAEN, and MiKTMC. I'm most interested in robot perception, SLAM, and autonomous systems.</p>
 
       <div class="about-grid">
         <div class="spec-card">
@@ -465,14 +545,327 @@
             <li>B.S.E. Computer Science</li>
             <li>B.S.E. Robotics</li>
             <li>University of Michigan — Expected May 2027</li>
+            <li>Honors: Dean's List / University Honors (Fall 2023, Winter 2026)</li>
           </ul>
         </div>
         <div class="spec-card">
           <h3>Focus Areas</h3>
           <ul>
             <li>Robot Perception &amp; SLAM</li>
-            <li>Site Reliability &amp; Cloud Infrastructure</li>
-            <li>Autonomous Systems &amp; Controls</li>
+            <li>Marine / Underwater Autonomy</li>
+            <li>Controls &amp; Embedded Systems</li>
+            <li>Cloud Infrastructure &amp; DevOps</li>
+          </ul>
+        </div>
+        <div class="spec-card coursework">
+          <h3>Relevant Coursework</h3>
+          <ul class="course-list">
+            <li><span class="code">ROB 330</span>SLAM &amp; Navigation</li>
+            <li><span class="code">ROB 535</span>Self-Driving Cars</li>
+            <li><span class="code">ROB 430</span>Deep Robot Perception</li>
+            <li><span class="code">ROB 320</span>Robot Operating Systems</li>
+            <li><span class="code">ROB 311</span>How to Make Robots</li>
+            <li><span class="code">ROB 472</span>Marine Robotics</li>
+            <li><span class="code">ROB 298</span>Robot Dynamics &amp; Simulation</li>
+            <li><span class="code">EECS 442</span>Computer Vision</li>
+            <li><span class="code">EECS 445</span>Machine Learning</li>
+            <li><span class="code">EECS 485</span>Web Systems</li>
+            <li><span class="code">EECS 281</span>Data Structures &amp; Algorithms</li>
+            <li><span class="code">EECS 370</span>Computer Organization</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="work-experience">
+      <div class="section-head">
+        <p class="eyebrow">Operation Log</p>
+        <h2>Work Experience</h2>
+      </div>
+
+      <div class="job">
+        <div class="job-date">OCT 2026 —<br>PRESENT</div>
+        <div>
+          <h3>Undergraduate Research Assistant</h3>
+          <span class="job-org">UMich Robotic Exploration Lab — Ann Arbor, MI</span>
+          <ul>
+            <li>Collaborated in a 4-person team to scope, specify, and integrate Chip-Scale Atomic Clock (CSAC) timing interfaces and acoustic hardware for One-Way Travel Time AUV navigation.</li>
+            <li>Evaluated low-frequency (500 Hz–2 kHz) acoustic transducers and Popoto modems to support microsecond-accurate underwater range estimation.</li>
+            <li>Configured embedded microcomputers to acquire real-time acoustic payload data and support onboard signal-processing algorithms for GPS-denied localization.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-date">SEP 2026 —<br>PRESENT</div>
+        <div>
+          <h3>Software Engineering Intern</h3>
+          <span class="job-org">Michigan Kidney Translational Medicine Center (MiKTMC) — Ann Arbor, MI</span>
+          <ul>
+            <li>Self-hosted and configured a Linux server to run the Arvados platform, authoring YAML configuration for cluster, service, and deployment settings in a biomedical data infrastructure designed to scale to 1,000+ TB.</li>
+            <li>Developed and maintained automated Python and Bash scripts for biomedical data ingestion, processing, and ETL workflows across 100+ TB of genomic and clinical datasets.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-date">JUN 2026 —<br>AUG 2026</div>
+        <div>
+          <h3>Site Reliability Engineering Intern</h3>
+          <span class="job-org">Barracuda Networks — Ann Arbor, MI</span>
+          <ul>
+            <li>Migrated 14 active CI/CD pipelines from Jenkins to GitHub Actions, enabling retirement of the organization's legacy Jenkins infrastructure.</li>
+            <li>Hardened Azure deployment workflows by using Terraform to provision managed identities and Azure Key Vault access for runtime secret retrieval, eliminating persistent credentials from CI/CD configuration.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-date">JAN 2026 —<br>PRESENT</div>
+        <div>
+          <h3>Software Engineering Fellow (Multidisciplinary Design Program)</h3>
+          <span class="job-org">UM CAEN — Ann Arbor, MI</span>
+          <ul>
+            <li>Developed a modular full-stack workflow automation platform (React + Node.js) built for 33,000+ faculty and staff, integrating calendar, file, and notification workflows.</li>
+            <li>Built FastAPI / SQLModel backend services for a Google Workspace storage-reclamation app, with OAuth 2.0 restricted to @umich.edu accounts and a Drive indexing service backed by Redis caching and PostgreSQL.</li>
+            <li>Containerized the backend with Docker and configured CI/deployment to AWS App Runner, managing production environment configuration and enforcing secure secret handling.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-date">JAN 2026 —<br>PRESENT</div>
+        <div>
+          <h3>Human-Robot Systems Teaching Assistant (ROB 204)</h3>
+          <span class="job-org">University of Michigan College of Engineering — Ann Arbor, MI</span>
+          <ul>
+            <li>Led weekly laboratory and discussion sections for 60+ students, covering human-robot interaction, interface design, teleoperation, automation, situation awareness, and ethical robotics design.</li>
+            <li>Mentored student teams through the engineering design process, including stakeholder interviews, requirements development, design ideation, usability studies, risk assessment, and iterative prototyping.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-head">
+        <p class="eyebrow">Build Log</p>
+        <h2>Projects</h2>
+      </div>
+
+      <article class="project">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <a class="play" href="./assets/ballbot.mp4" data-video-dialog="ballbot-dialog">
+            <span class="sr-only">Play demo video: </span>
+            <img src="./assets/project-ballbot.webp" width="960" height="540" loading="lazy" decoding="async"
+                 alt="Three-omni-wheel ball-bot balancing on a basketball on a lab table">
+            <span class="play-badge" aria-hidden="true">▶ PLAY DEMO</span>
+          </a>
+        </div>
+        <div class="project-body">
+          <p class="eyebrow">Python · Raspberry Pi · RP2040 · LCM · PID · Onshape</p>
+          <h3>Self-Balancing Omnidirectional Ball-Bot</h3>
+          <p>Designed and built a three-omni-wheel ball-bot: mechanical assembly, 3D-printed parts, and the kinematic mapping from body motion to individual wheel commands. A 100 Hz multithreaded control pipeline links a Raspberry Pi and an RP2040 over LCM for sensor acquisition, state estimation, and motor actuation. I implemented and experimentally compared feedforward, PID, and combined feedforward + PID wheel-speed control using encoder feedback.</p>
+          <ul class="links">
+            <li><a href="./assets/ballbot.mp4" target="_blank" rel="noopener">Demo <span aria-hidden="true">↗</span><span class="sr-only"> video of the ball-bot (opens in a new tab)</span></a></li>
+            <li><span class="plain">Code available on request</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <img src="./assets/thumbs/robex-owtt.svg" width="960" height="540" loading="lazy" decoding="async"
+               alt="Schematic: an acoustic beacon hung through sea ice sends timed pings to an AUV, which computes range from one-way travel time">
+        </div>
+        <div class="project-body">
+          <p class="eyebrow">AUV Navigation · CSAC Timing · Acoustic Modems · Embedded</p>
+          <h3>Under-Ice AUV Navigation (ROBEX Research)</h3>
+          <p>Research in the Robotic Exploration Lab on navigating autonomous underwater vehicles beneath ice, where GPS is unavailable. Our team is building One-Way Travel Time acoustic navigation: Chip-Scale Atomic Clocks keep a beacon and the vehicle synchronized, so range can be computed from how long each acoustic ping takes to arrive. I evaluate low-frequency transducers and Popoto modems and configure the embedded computers that capture acoustic payload data for onboard processing.</p>
+          <ul class="links">
+            <li><span class="plain">Ongoing lab research · code not public</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <img src="./assets/thumbs/ik-solver.svg" width="960" height="540" loading="lazy" decoding="async"
+               alt="Schematic: a three-link robot arm stepping toward a target point using the Jacobian pseudo-inverse update">
+        </div>
+        <div class="project-body">
+          <p class="eyebrow">C++ · Eigen · RIX Middleware</p>
+          <h3>Inverse Kinematics Solver &amp; RIX Service</h3>
+          <p>A numerical inverse-kinematics solver in C++ that uses Eigen to compute the geometric Jacobian's pseudo-inverse and converges on joint configurations by gradient descent. It runs behind <code>iksrv</code>, an asynchronous service node on the RIX middleware that accepts motion-planning requests and returns joint-configuration trajectories.</p>
+          <ul class="links">
+            <li><span class="plain">Code available on request</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <img src="./assets/project-4dgs.webp" width="960" height="540" loading="lazy" decoding="async"
+               alt="Gaussian-splat reconstructions of a person doing jumping jacks under three regularization settings">
+        </div>
+        <div class="project-body">
+          <p class="eyebrow">PyTorch · 4D Gaussian Splatting · GroundingDINO · SAM 2</p>
+          <h3>Dynamic Scene Reconstruction via Soft Mask Gating in 4DGS</h3>
+          <p>Extended the official 4DGS codebase with a learnable sigmoid-gated scalar branch to modulate multi-resolution HexPlane deformation features, benchmarked across D-NeRF and HyperNeRF datasets.</p>
+          <ul class="links">
+            <li><a href="https://lucasswierad.github.io/DeepRobFinalProjectWebsite/" target="_blank" rel="noopener noreferrer">Write-up <span aria-hidden="true">↗</span><span class="sr-only"> for the 4DGS project (opens in a new tab)</span></a></li>
+            <li><a href="https://github.com/LucasSwierad/DeepRobFinalProject" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span><span class="sr-only"> for the 4DGS project on GitHub (opens in a new tab)</span></a></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <img src="./assets/thumbs/robot-task-platform.svg" width="960" height="540" loading="lazy" decoding="async"
+               alt="Architecture schematic: operator console and Spring Boot control plane publish to an event bus that launches test jobs on EKS, connected to a hardware-in-the-loop bridge">
+        </div>
+        <div class="project-body">
+          <p class="eyebrow">Java · Spring Boot · gRPC · K8s/EKS · Terraform · Next.js</p>
+          <h3>Robot Task Platform</h3>
+          <p>An event-driven hardware-in-the-loop test platform that runs robot test jobs in isolated Kubernetes pods on AWS EKS. A Java / Spring Boot control plane (REST, gRPC, PostgreSQL, EventBridge/SQS) orchestrates runs, and a Next.js operator console with OIDC role-based access launches tests, monitors telemetry, and gates production certification. EKS, RDS, and DynamoDB are provisioned with Terraform; GitHub Actions CI/CD runs JUnit, Testcontainers, and Cypress suites before deploying.</p>
+          <ul class="links">
+            <li><span class="plain">Code available on request</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="project project--linked">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <img src="./assets/project-file-cleaner.webp" width="960" height="540" loading="lazy" decoding="async"
+               alt="Screenshot of the File Cleaner web app: a Drive index sidebar next to a sortable list of Google Drive files">
+        </div>
+        <div class="project-body">
+          <p class="eyebrow">FastAPI · Next.js · PostgreSQL · Redis · AWS</p>
+          <h3>UM CAEN Google File Cleaner</h3>
+          <p>Developed a modular web application that streamlines administrative tasks by including bulk file operations and other time-saving features for faculty and staff.</p>
+          <p class="link-note">Note: link accessible with a University of Michigan email only.</p>
+          <ul class="links">
+            <li><a class="stretched" href="https://mgenie.engin.umich.edu/file-cleaner" target="_blank" rel="noopener noreferrer">Live app <span aria-hidden="true">↗</span><span class="sr-only">: UM CAEN Google File Cleaner (opens in a new tab)</span></a></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <img src="./assets/thumbs/bug-tracker.svg" width="960" height="540" loading="lazy" decoding="async"
+               alt="Wireframe of the bug tracker: a list of logged bugs beside an AI summary panel with a chart">
+        </div>
+        <div class="project-body">
+          <p class="eyebrow">React.js · FastAPI · MongoDB · Gemini</p>
+          <h3>AI-Powered Bug Tracker</h3>
+          <p>Built a full-stack bug tracking app with a React.js frontend and FastAPI backend, integrating Google Gemini to summarize historical bug data and surface recurring patterns.</p>
+          <ul class="links">
+            <li><span class="plain">Code available on request</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="project project--linked">
+        <div class="frame">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <img src="./assets/thumbs/mcp-agent.svg" width="960" height="540" loading="lazy" decoding="async"
+               alt="Schematic: a planner agent delegating to research, calendar/email over MCP, and summarizer sub-agents">
+        </div>
+        <div class="project-body">
+          <p class="eyebrow">Python · Model Context Protocol · Multi-Agent</p>
+          <h3>Multi-Agent MCP Assistant</h3>
+          <p>A planner agent breaks a multi-step request into tasks and delegates them to specialist sub-agents — web research, calendar and email over the Model Context Protocol, and a summarizer — then assembles the result end-to-end, e.g. "research these 5 competitors and draft a comparison doc."</p>
+          <ul class="links">
+            <li><a class="stretched" href="https://github.com/LucasSwierad/MCP_Agent_project" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">↗</span><span class="sr-only"> for the Multi-Agent MCP Assistant on GitHub (opens in a new tab)</span></a></li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section id="skills">
+      <div class="section-head">
+        <p class="eyebrow">Component List</p>
+        <h2>Skills</h2>
+      </div>
+      <div class="skills-cols">
+        <div>
+          <h3>Languages</h3>
+          <ul class="tag-list">
+            <li class="tag">Python</li>
+            <li class="tag">C++</li>
+            <li class="tag">C</li>
+            <li class="tag">Java</li>
+            <li class="tag">TypeScript / JavaScript</li>
+            <li class="tag">SQL</li>
+            <li class="tag">MATLAB</li>
+            <li class="tag">Julia</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Robotics</h3>
+          <ul class="tag-list">
+            <li class="tag">ROS 2</li>
+            <li class="tag">LCM</li>
+            <li class="tag">Gazebo</li>
+            <li class="tag">Eigen</li>
+            <li class="tag">Raspberry Pi</li>
+            <li class="tag">RP2040</li>
+            <li class="tag">PID / State Estimation</li>
+            <li class="tag">Onshape / SolidWorks</li>
+          </ul>
+        </div>
+        <div>
+          <h3>ML / Perception</h3>
+          <ul class="tag-list">
+            <li class="tag">PyTorch</li>
+            <li class="tag">OpenCV</li>
+            <li class="tag">NumPy</li>
+            <li class="tag">scikit-learn</li>
+            <li class="tag">Gaussian Splatting</li>
+            <li class="tag">SAM 2 / GroundingDINO</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Software</h3>
+          <ul class="tag-list">
+            <li class="tag">React</li>
+            <li class="tag">Next.js</li>
+            <li class="tag">Node.js</li>
+            <li class="tag">FastAPI</li>
+            <li class="tag">Flask</li>
+            <li class="tag">Spring Boot</li>
+            <li class="tag">gRPC</li>
+            <li class="tag">PostgreSQL</li>
+            <li class="tag">MongoDB</li>
+            <li class="tag">Redis</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Infra / DevOps</h3>
+          <ul class="tag-list">
+            <li class="tag">AWS (EKS, App Runner)</li>
+            <li class="tag">Azure</li>
+            <li class="tag">Docker</li>
+            <li class="tag">Kubernetes</li>
+            <li class="tag">Terraform</li>
+            <li class="tag">Ansible</li>
+            <li class="tag">GitHub Actions</li>
+            <li class="tag">Jenkins</li>
+            <li class="tag">Linux</li>
           </ul>
         </div>
       </div>
@@ -485,170 +878,16 @@
       </div>
 
       <div class="project">
-        <div class="img-placeholder">
+        <div class="frame">
           <span class="corner tl"></span><span class="corner tr"></span>
           <span class="corner bl"></span><span class="corner br"></span>
-          <img src="./assets/hobbies.JPG" alt="Hobbies" style="width:100%;height:100%;object-fit:contain;">
+          <img src="./assets/hobbies.webp" width="960" height="540" loading="lazy" decoding="async"
+               alt="Pickup volleyball game in a University of Michigan gym, with players jumping at the net">
         </div>
         <div class="project-body">
           <p class="eyebrow">Volleyball · Basketball · Golf</p>
           <h3>When I'm not engineering</h3>
-          <p>I play sports like volleyball, basketball, and golf regularly and enjoy staying active outside of coursework and research. </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="work-experience">
-      <div class="section-head">
-        <p class="eyebrow">Operation Log</p>
-        <h2>Work Experience</h2>
-      </div>
-
-      <div class="job">
-        <div class="job-date">JUN 2026 —<br>PRESENT</div>
-        <div>
-          <h3>Site Reliability Engineering Intern</h3>
-          <span class="job-org">Barracuda Networks — Ann Arbor, MI</span>
-          <ul>
-            <li>Decommissioned 100% of legacy Jenkins infrastructure by migrating 14 active development pipelines to GitHub Actions.</li>
-            <li>Secured sensitive pipeline data by integrating managed identities and Azure Key Vault into deployment workflows, automating runtime retrieval of secrets and cryptographic keys.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="job">
-        <div class="job-date">JAN 2026 —<br>DEC 2026</div>
-        <div>
-          <h3>Multidisciplinary Design Program Intern</h3>
-          <span class="job-org">UM-CAEN — Ann Arbor, MI</span>
-          <ul>
-            <li>Designing and developing a modular web application to automate administrative workflows for faculty and staff, reducing time spent on calendar management, file organization, and routine notifications.</li>
-            <li>Implemented secure backend services using Node.js to support workflow automation, business logic, and API orchestration.</li>
-            <li>Integrated Google Workspace APIs (Calendar, Drive, People) and Google OAuth / U-M SSO for permission-aware access and calendar automation.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="job">
-        <div class="job-date">JAN 2026 —<br>MAY 2026</div>
-        <div>
-          <h3>Teaching Assistant</h3>
-          <span class="job-org">UM Robotics — Ann Arbor, MI</span>
-          <ul>
-            <li>Prepared instructional materials and led laboratory sections to support student learning.</li>
-            <li>Facilitated lectures and recitation sections, and administered grading and exams.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="skills">
-      <div class="section-head">
-        <p class="eyebrow">Component List</p>
-        <h2>Skills</h2>
-      </div>
-      <div class="skills-cols">
-        <div>
-          <h3>Languages</h3>
-          <div class="tag-list">
-            <span class="tag">Python</span>
-            <span class="tag">C++</span>
-            <span class="tag">C</span>
-            <span class="tag">JavaScript</span>
-            <span class="tag">SQL</span>
-          </div>
-        </div>
-        <div>
-          <h3>Technologies</h3>
-          <div class="tag-list">
-            <span class="tag">Git / GitHub Actions</span>
-            <span class="tag">Azure</span>
-            <span class="tag">AWS</span>
-            <span class="tag">Kubernetes</span>
-            <span class="tag">Jenkins</span>
-            <span class="tag">Terraform</span>
-            <span class="tag">ROS</span>
-            <span class="tag">PyTorch</span>
-            <span class="tag">React.js</span>
-            <span class="tag">Node.js / Express.js</span>
-            <span class="tag">Flask / FastAPI</span>
-            <span class="tag">NumPy / Scikit-Learn</span>
-            <span class="tag">OpenCV</span>
-            <span class="tag">SolidWorks / Onshape</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="projects">
-      <div class="section-head">
-        <p class="eyebrow">Build Log</p>
-        <h2>Projects</h2>
-      </div>
-      
-      <div class="project">
-        <div class="img-placeholder">
-          <span class="corner tl"></span><span class="corner tr"></span>
-          <span class="corner bl"></span><span class="corner br"></span>
-          <img src="./assets/project-pic5.png" alt="UM CAEN Google File Cleaner" style="width:100%;height:100%;object-fit:cover;">
-        </div>
-        <div class="project-body">
-          <p class="eyebrow">FastAPI · Next.js · PostgreSQL · Redis · AWS</p>
-          <h3><a href="https://mgenie.engin.umich.edu/file-cleaner" target="_blank" rel="noopener noreferrer" class="project-link">UM CAEN Google File Cleaner</a></h3>
-          <p>Developed a modular web application that streamlines administrative tasks by including bulk file operations and other time-saving features for faculty and staff.</p>
-          <p class="link-note">Note: link accessible with a University of Michigan email only.</p>
-        </div>
-      </div>
-
-      <div class="project">
-        <div class="img-placeholder">
-          <span class="corner tl"></span><span class="corner tr"></span>
-          <span class="corner bl"></span><span class="corner br"></span>
-          <img src="./assets/project-pic1.png" alt="Dynamic Scene Reconstruction via Soft Mask Gating in 4DGS" style="width:100%;height:100%;object-fit:cover;">
-        </div>
-        <div class="project-body">
-          <p class="eyebrow">PyTorch · 4DGS · GroundingDINO · SAM 2</p>
-          <h3><a href="https://lucasswierad.github.io/DeepRobFinalProjectWebsite/" target="_blank" rel="noopener noreferrer" class="project-link">Dynamic Scene Reconstruction via Soft Mask Gating in 4DGS</a></h3>
-          <p>Extended the official 4DGS codebase with a learnable sigmoid-gated scalar branch to modulate multi-resolution HexPlane deformation features, benchmarked across D-NeRF and HyperNeRF datasets.</p>
-        </div>
-      </div>
-
-      <div class="project">
-        <div class="img-placeholder">
-          <span class="corner tl"></span><span class="corner tr"></span>
-          <span class="corner bl"></span><span class="corner br"></span>
-          <img src="./assets/project-pic3.png" alt="AI-Powered Bug Tracker" style="width:100%;height:100%;object-fit:contain;">
-        </div>
-        <div class="project-body">
-          <p class="eyebrow">React.js · FastAPI · MongoDB · Gemini</p>
-          <h3>AI-Powered Bug Tracker</h3>
-          <p>Built a full-stack bug tracking app with a React.js frontend and FastAPI backend, integrating Google Gemini to summarize historical bug data and surface recurring patterns.</p>
-        </div>
-      </div>
-
-      <div class="project">
-        <div class="img-placeholder">
-          <span class="corner tl"></span><span class="corner tr"></span>
-          <span class="corner bl"></span><span class="corner br"></span>
-          <img src="./assets/project-pic2.png" alt="Self-Balancing Omnidirectional Ball-Bot" style="width:100%;height:100%;object-fit:contain;">
-        </div>
-        <div class="project-body">
-          <p class="eyebrow">Onshape · Python · PID Control · Kinematics</p>
-          <h3>Self-Balancing Omnidirectional Ball-Bot</h3>
-          <p>Designed and implemented a PID-based closed-loop balance and steering architecture for a 3-omni-wheel holonomic robot on a spherical surface, with a multi-threaded Python control pipeline running at 100 Hz over LCM.</p>
-        </div>
-      </div>
-
-      <div class="project">
-        <div class="img-placeholder">
-          <span class="corner tl"></span><span class="corner tr"></span>
-          <span class="corner bl"></span><span class="corner br"></span>
-          <img src="./assets/project-pic6.png" alt="GPT-2 replication" style="width:100%;height:100%;object-fit:cover;">
-        </div>
-        <div class="project-body">
-          <p class="eyebrow">PyTorch · NumPy · Pandas</p>
-          <h3>Replicating GPT-2</h3>
-          <p>Recreated a scaled-down version of OpenAI's GPT-2 from scratch, implementing multi-head attention, positional encoding, and layer normalization, then trained it on text data.</p>
+          <p>I play sports like volleyball, basketball, and golf regularly and enjoy staying active outside of coursework and research.</p>
         </div>
       </div>
     </section>
@@ -674,43 +913,72 @@
 
   <footer>© 2026 LUCAS SWIERAD — BUILT WITH BLUEPRINT PRECISION</footer>
 
+  <dialog id="ballbot-dialog" class="video-dialog" aria-label="Ball-bot demo video">
+    <video controls playsinline preload="none" width="720" height="1280" poster="./assets/ballbot-poster.webp">
+      <source src="./assets/ballbot.mp4" type="video/mp4">
+      Your browser can't play this video. <a href="./assets/ballbot.mp4">Download the MP4</a>.
+    </video>
+    <form method="dialog"><button class="btn" type="submit">Close</button></form>
+  </dialog>
+
 <script>
+  const sections = document.querySelectorAll('section');
+
+  // Scroll reveal (runs first so a later error can never leave sections hidden).
+  // threshold 0 + a bottom margin triggers once a section's top passes 90% of the
+  // viewport, so very short and very tall sections both reveal reliably.
+  if (document.documentElement.classList.contains('js')) {
+    const revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+    sections.forEach(s => revealObserver.observe(s));
+  }
+
+  // Mobile menu
   const menuBtn = document.getElementById('menuBtn');
   const mobileMenu = document.getElementById('mobile-menu');
-  menuBtn.addEventListener('click', () => {
-    const isOpen = mobileMenu.classList.toggle('open');
-    menuBtn.setAttribute('aria-expanded', isOpen);
+  function setMenu(open){
+    mobileMenu.classList.toggle('open', open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+  }
+  menuBtn.addEventListener('click', () => setMenu(!mobileMenu.classList.contains('open')));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) { setMenu(false); menuBtn.focus(); }
   });
-  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    mobileMenu.classList.remove('open');
-    menuBtn.setAttribute('aria-expanded', false);
-  }));
 
-  const sections = document.querySelectorAll('section');
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('in-view');
+  // Video thumbnails open in a dialog; without JS (or <dialog>) the link opens the MP4.
+  document.querySelectorAll('[data-video-dialog]').forEach(link => {
+    const dlg = document.getElementById(link.dataset.videoDialog);
+    if (!dlg || typeof dlg.showModal !== 'function') return;
+    const vid = dlg.querySelector('video');
+    link.addEventListener('click', e => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      e.preventDefault();
+      dlg.showModal();
+      const p = vid.play();
+      if (p && p.catch) p.catch(() => {});
     });
-  }, { threshold: 0.12 });
-  sections.forEach(s => revealObserver.observe(s));
+    dlg.addEventListener('close', () => vid.pause());
+    dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  });
 
+  // Kinematic chain rail progress + active joint
   const joints = document.querySelectorAll('.joint');
   const chainFill = document.getElementById('chainFill');
   const totalLen = chainFill.getTotalLength ? chainFill.getTotalLength() : 740;
   chainFill.style.strokeDasharray = totalLen;
   chainFill.style.strokeDashoffset = totalLen;
 
-  joints.forEach(j => {
-    j.addEventListener('click', () => {
-      const target = document.getElementById(j.dataset.target);
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-
   function updateChain(){
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = Math.min(1, Math.max(0, scrollTop / docHeight));
+    const progress = docHeight > 0 ? Math.min(1, Math.max(0, scrollTop / docHeight)) : 0;
     chainFill.style.strokeDashoffset = totalLen - (totalLen * progress);
 
     let activeId = sections[0].id;
@@ -718,7 +986,11 @@
       const rect = s.getBoundingClientRect();
       if (rect.top <= window.innerHeight * 0.4) activeId = s.id;
     });
-    joints.forEach(j => j.classList.toggle('active', j.dataset.target === activeId));
+    joints.forEach(j => {
+      const isActive = j.dataset.target === activeId;
+      j.classList.toggle('active', isActive);
+      if (isActive) j.setAttribute('aria-current', 'location'); else j.removeAttribute('aria-current');
+    });
   }
   window.addEventListener('scroll', updateChain, { passive: true });
   window.addEventListener('resize', updateChain);

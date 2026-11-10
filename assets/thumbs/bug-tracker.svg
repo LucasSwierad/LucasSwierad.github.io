@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" font-family="'IBM Plex Mono', Consolas, Menlo, monospace">
+  <title>Wireframe of the bug tracker: bug list beside an AI summary panel</title>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#4fa8d8" stroke-opacity=".08"/>
+    </pattern>
+  </defs>
+  <rect width="960" height="540" fill="#0f2740"/>
+  <rect width="960" height="540" fill="url(#grid)"/>
+
+  <!-- window -->
+  <rect x="40" y="36" width="880" height="430" rx="10" fill="#0b1e33" stroke="#4fa8d8" stroke-width="3"/>
+  <line x1="40" y1="86" x2="920" y2="86" stroke="#4fa8d8" stroke-width="2"/>
+  <g fill="#2c5a7d"><circle cx="74" cy="61" r="8"/><circle cx="102" cy="61" r="8"/><circle cx="130" cy="61" r="8"/></g>
+  <text x="166" y="70" font-size="24" fill="#7f9db3">BUG LOG</text>
+
+  <!-- bug rows -->
+  <g fill="none" stroke="#2c5a7d" stroke-width="2">
+    <rect x="70" y="110" width="490" height="54" rx="4"/>
+    <rect x="70" y="176" width="490" height="54" rx="4"/>
+    <rect x="70" y="242" width="490" height="54" rx="4"/>
+    <rect x="70" y="308" width="490" height="54" rx="4"/>
+    <rect x="70" y="374" width="490" height="54" rx="4"/>
+  </g>
+  <g>
+    <circle cx="98" cy="137" r="9" fill="#ff8a3d"/>
+    <circle cx="98" cy="203" r="9" fill="#4fa8d8"/>
+    <circle cx="98" cy="269" r="9" fill="#ff8a3d"/>
+    <circle cx="98" cy="335" r="9" fill="#8fd4f5"/>
+    <circle cx="98" cy="401" r="9" fill="#4fa8d8"/>
+  </g>
+  <g fill="#2c5a7d">
+    <rect x="124" y="130" width="250" height="14" rx="3"/><rect x="400" y="130" width="130" height="14" rx="3" fill-opacity=".6"/>
+    <rect x="124" y="196" width="300" height="14" rx="3"/><rect x="450" y="196" width="80" height="14" rx="3" fill-opacity=".6"/>
+    <rect x="124" y="262" width="210" height="14" rx="3"/><rect x="360" y="262" width="170" height="14" rx="3" fill-opacity=".6"/>
+    <rect x="124" y="328" width="280" height="14" rx="3"/><rect x="430" y="328" width="100" height="14" rx="3" fill-opacity=".6"/>
+    <rect x="124" y="394" width="230" height="14" rx="3"/><rect x="380" y="394" width="150" height="14" rx="3" fill-opacity=".6"/>
+  </g>
+
+  <!-- AI summary panel -->
+  <rect x="590" y="110" width="300" height="318" rx="6" fill="#122c49" stroke="#ff8a3d" stroke-width="3"/>
+  <path d="M624 130 L630 146 L646 152 L630 158 L624 174 L618 158 L602 152 L618 146Z" fill="#ff8a3d"/>
+  <text x="660" y="162" font-size="26" fill="#ff8a3d">AI SUMMARY</text>
+  <g fill="#7f9db3" fill-opacity=".55">
+    <rect x="612" y="192" width="250" height="12" rx="3"/>
+    <rect x="612" y="216" width="220" height="12" rx="3"/>
+    <rect x="612" y="240" width="240" height="12" rx="3"/>
+  </g>
+  <line x1="612" y1="404" x2="868" y2="404" stroke="#2c5a7d" stroke-width="2"/>
+  <g fill="#4fa8d8">
+    <rect x="620" y="330" width="34" height="74"/>
+    <rect x="670" y="290" width="34" height="114"/>
+    <rect x="720" y="350" width="34" height="54"/>
+    <rect x="770" y="310" width="34" height="94" fill="#ff8a3d"/>
+    <rect x="820" y="366" width="34" height="38"/>
+  </g>
+
+  <text x="40" y="516" font-size="22" letter-spacing="3" fill="#7f9db3">REACT · FASTAPI · GEMINI · WIREFRAME</text>
+</svg>

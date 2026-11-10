@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" font-family="'IBM Plex Mono', Consolas, Menlo, monospace">
+  <title>Schematic: three-link arm converging on a target with the Jacobian pseudo-inverse</title>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#4fa8d8" stroke-opacity=".08"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#ff8a3d"/>
+    </marker>
+  </defs>
+  <rect width="960" height="540" fill="#0f2740"/>
+  <rect width="960" height="540" fill="url(#grid)"/>
+
+  <!-- update rule -->
+  <text x="60" y="110" font-size="46" fill="#eaf2f8">Δθ = J<tspan font-size="28" dy="-20">+</tspan><tspan dy="20"> Δx</tspan></text>
+
+  <!-- ground + base -->
+  <line x1="130" y1="450" x2="400" y2="450" stroke="#2c5a7d" stroke-width="4"/>
+  <path d="M150 450l-22 24M190 450l-22 24M230 450l-22 24M270 450l-22 24M310 450l-22 24M350 450l-22 24M390 450l-22 24" stroke="#2c5a7d" stroke-width="3"/>
+  <path d="M205 450 L225 405 H295 L315 450Z" fill="#0b1e33" stroke="#4fa8d8" stroke-width="4"/>
+
+  <!-- previous iterate -->
+  <polyline points="260,405 352,238 552,262 646,392" fill="none" stroke="#4fa8d8" stroke-opacity=".4"
+            stroke-width="8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 16"/>
+
+  <!-- current configuration -->
+  <polyline points="260,405 400,230 600,190 730,300" fill="none" stroke="#4fa8d8" stroke-width="14"
+            stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#0b1e33" stroke="#8fd4f5" stroke-width="5">
+    <circle cx="260" cy="405" r="17"/>
+    <circle cx="400" cy="230" r="17"/>
+    <circle cx="600" cy="190" r="17"/>
+  </g>
+  <circle cx="730" cy="300" r="11" fill="#8fd4f5"/>
+
+  <!-- target + error vector -->
+  <g transform="translate(810 180)" stroke="#ff8a3d" stroke-width="4" fill="none">
+    <circle r="24"/>
+    <path d="M-40 0H-12M12 0H40M0 -40V-12M0 12V40"/>
+  </g>
+  <line x1="742" y1="284" x2="794" y2="206" stroke="#ff8a3d" stroke-width="4" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+  <text x="790" y="290" font-size="36" fill="#ff8a3d">Δx</text>
+
+  <text x="40" y="516" font-size="22" letter-spacing="3" fill="#7f9db3">JACOBIAN PSEUDO-INVERSE IK · SCHEMATIC</text>
+</svg>
